@@ -12,6 +12,3 @@ function copyToClipboard() {
      text */
     alert("Copied the text: " + copyText.value);
 }
-=======
-
->>>>>>> 0a923048441a0a0aa777afb38e468ea50ae81217
