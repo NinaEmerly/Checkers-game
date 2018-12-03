@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function copyToClipboard() {
     /* Get the text field */
     var copyText = document.getElementById("ShareableLink");
