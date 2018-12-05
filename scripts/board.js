@@ -23,9 +23,14 @@ var main = function() {
     Space.prototype.setCol = function(col) { this.col = col; };
 
     /* Space togglers */
-    Space.prototype.toggleAvailable = function() { this.available = !this.available; };
-    Space.prototype.toggleOccupiedOwn = function() { this.occupiedOwn = !this.occupiedOwn; };
-    Space.prototype.toggleOccupiedOpp = function() { this.occupiedOpp = !this.occupiedOpp; };
+    Space.prototype.toggleOccupiedOwn = function() {
+        this.available = this.occupiedOwn;
+        this.occupiedOwn = !this.occupiedOwn;
+    };
+    Space.prototype.toggleOccupiedOpp = function() {
+        this.available = this.occupiedOpp;
+        this.occupiedOpp = !this.occupiedOpp;
+    };
 
     /* Construct the initial checkerboard */
     function Game() {
