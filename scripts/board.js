@@ -1,19 +1,66 @@
 var main = function() {
     "use strict";
 
-    function Space(row, col, occupiedOwn, occupiedOpp) {
-        this.row = row;
-        this.col = col;
-        this.occupiedOwn = occupiedOwn;
-        this.occupiedOpp = occupiedOpp;
-        if (occupiedOwn === false && occupiedOpp === false) {
-            this.available = true;
-        } else this.available = false;
+    /*
+    * validSpace checks if a given position is on a 8x8 checkerboard
+    * Parameter row: integer horizontal position
+    * Parameter col: integer vertical position
+    * Returns: boolean. true if position is a valid space, else false
+    */
+    function validSpace(row, col) {
+        if(row < 0 || row > 7 || col < 0 || col > 7) {
+            return false;
+        } else return true;
+    }
+
+    /*
+    * getNeighbor checks an element in the board array at given row and column
+    * if the element already contains a Space object, return a reference to that object
+    * if the element is still empty, create and return a new Space object
+    * if the 
+    */
+    function getNeighbor(row, col, board) {
+        if (!validSpace(row, col)) {
+            return null;
+        } else if (board[row][col] instanceof Space) {
+            return board[row][col];
+        } else return new Space(row, col, board);
+    }
+
+    function Space(row, col, board) {
+        this.row = row;                     // integer horizontal position on board
+        this.col = col;                     // integer vertical position on board
+        this.occupiedOwn = false;           // boolean, space is occupied by own piece
+        this.occupiedOpp = false;           // boolean, space is occupied by opponent's piece
+        this.available = true;              // boolean, space is unoccupied
+        
+        var ur_row = row + 1;
+        var ur_col = col + 1;
+        var ll_row = row - 1;
+        var ll_col = col - 1;
+        var ur_Space, ul_Space, ll_Space, lr_Space;
+        if (board[ur_row][ur_col] instanceof Space) {
+            ur_Space = board[ur_row][ur_col];
+        } else if (validSpace(ur_row, ur_col)) {
+            ur_Space = new Space(ur_row, ur_col);
+        } else ur_Space = null;
+
+        if (validSpace(ur_row, ll_col)) {
+            ul_Space = new Space(ur_row, ll_col);
+        } else ul_Space = null;
+        if (validSpace(ll_row, ll_col)) {
+            ll_Space = new Space(ll_row, ll_col);
+        } else ll_Space = null;
+        if (validSpace(ll_row, ur_col)) {
+            lr_Space = new Space(ll_row, ur_col);
+        } else lr_Space = null;
+        this.neighbors = new Array(ur_Space, ul_Space, ll_Space, lr_Space);      // array of references to adjacent spaces [ur, ul, ll, lr]
     }
 
     /* Space getters */
     Space.prototype.getRow = function() { return this.row; };
     Space.prototype.getCol = function() { return this.col; };
+    Space.prototype.getNeighbors = function() { return this.neighbors; };
     Space.prototype.getOccupiedOwn = function() { return this.occupiedOwn; };
     Space.prototype.getOccupiedOpp = function() { return this.occupiedOpp; };
     Space.prototype.getAvailable = function() { return this.available; };
@@ -21,6 +68,9 @@ var main = function() {
     /* Space setters */
     Space.prototype.setRow = function(row) { this.row = row; };
     Space.prototype.setCol = function(col) { this.col = col; };
+    Space.prototype.setNeighbors = function(ur, ul, ll, lr) {
+            this.neighbors.splice(0, this.neighbors.length, ur, ul, ll, lr);
+    };
 
     /* Space togglers */
     Space.prototype.toggleOccupiedOwn = function() {
@@ -32,12 +82,16 @@ var main = function() {
         this.occupiedOpp = !this.occupiedOpp;
     };
 
+    Space.prototype.genSpaces = function(hor, ver) {
+
+    };
+
     /* Construct the initial checkerboard */
     function Game() {
-        // Initialize an empty board 8x4
+        // Initialize an empty board 8x8
         this.board = new Array(0);
         for (var i=0; i<8; i++) {
-            this.board.push(new Array(4));
+            this.board.push(new Array(8));
         }
         // Populate board with spaces and pieces
         // Rows 0-2: own pieces
