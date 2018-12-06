@@ -39,3 +39,21 @@ function Game() {
 Game.prototype.getBoard = function() { return this.board; };
 Game.prototype.getSpace = function(row, col) { return this.board[row][col]; };
 Game.prototype.getPiece = function(row, col) { return this.board[row][col].getPiece(); };
+
+/*
+*   movePiece removes the provided piece object from its prior space,
+*   and adds it to the destination space. All fields are updated accordingly
+*   Parameter piece: PieceMan or PieceKing object to move
+*   Parameter destination: Space object selected to move this piece into
+*   Throws exception if piece is not a PieceMan or PieceKing object
+*   Throws exception if destination is not a Space object
+*   Throws exception if destination is not a valid move
+*/
+Game.prototype.movePiece = function(piece, destination) {
+    // Exception
+    if (!(piece instanceof PieceMan)) {
+        throw "Piece selected to move is not a PieceMan or PieceKing object";
+    }
+    // Pass on method
+    piece.movePiece(destination);
+}

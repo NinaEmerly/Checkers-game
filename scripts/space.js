@@ -42,23 +42,24 @@ Space.prototype.setCol = function(col) { this.col = col; };
 
 /* piece is either null or a pieceMan object */
 Space.prototype.setPiece = function(piece) {
-    if (piece instanceof PieceMan) {    // If piece is a man or a king (inherited man), not null
-        this.piece = piece;
-        if (piece.own) {
-            this.toggleOccupiedOwn();
-        } else {
-            this.toggleOccupiedOpp();
-        }
-    } else if (piece === null) {
-        if (this.piece instanceof PieceMan) {
-            if (this.piece.own) {
-                this.toggleOccupiedOwn();
-            } else if (!this.piece.own) {
-                this.toggleOccupiedOpp();
-            }
-        }
-        this.piece = piece;
-    } else {console.log("Ignored to attempt set piece of Space: " + this + " to: " + piece)}
+    // Exception
+    if (!(piece instanceof PieceMan) && piece !== null) {
+        throw ("Ignored to attempt set piece of Space: " + this + " to: " + piece);
+    }
+
+    if (piece instanceof PieceMan) {        // If a new piece is set in this space
+        this.occupiedOwn = piece.own;       // Update relevant information
+        this.occupiedOpp = !piece.own;
+        this.available = false;
+    } else if (piece === null) {            // Else if this space is cleared
+        this.occupiedOwn = false;           // Update relevant information
+        this.occupiedOpp = false;
+        this.available = true;
+    }
+    this.piece = piece;                     // The new piece is moved in this space
+    if (piece instanceof PieceMan && this.piece.getSpace() !== this) {   // (This line to prevent an infinite loop)
+        this.piece.setSpace(this);          // Bind this space to new piece
+    }
 };
 Space.prototype.setNeighbors = function(ur, ul, ll, lr) {
         this.neighbors.splice(0, this.neighbors.length, ur, ul, ll, lr);

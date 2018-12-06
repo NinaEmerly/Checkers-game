@@ -21,7 +21,7 @@ PieceKing.prototype.validMoves = function() {
     var destinations = new Array(0);
 
     // Iterate over all directions
-    for (var i=0; i<=4; i++) {
+    for (var i=0; i<=3; i++) {
         neighbor = this.space.neighbors[i];                             // 'neighbor' is the closest space in that direction
 
         // Add all unoccupied spaces in that direction to valid destinations
