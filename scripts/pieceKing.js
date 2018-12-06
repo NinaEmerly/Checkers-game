@@ -10,7 +10,7 @@ function PieceKing(own, space) {
 PieceKing.prototype = Object.create(PieceMan.prototype);
 PieceKing.prototype.constructor = PieceKing;
 
-/*  @Overwrite
+/*  @Override
 *   validMoves checks if the spaces in a diagonal line from this gamepiece are unoccupied
 *   and looks for possible opponent's pieces that can be taken
 *   Returns: an array of valid destinations for this gamepiece to move in
@@ -43,4 +43,11 @@ PieceKing.prototype.validMoves = function() {
         }
     }
     return destinations;
+}
+
+/*  @Override
+*   crown changes a pieceMan to pieceKing object, but is obsolete for this object
+*/
+PieceKing.prototype.crown = function() {
+    return;
 }
