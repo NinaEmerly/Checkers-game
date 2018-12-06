@@ -40,7 +40,7 @@ Space.prototype.getPiece = function() { return this.piece; };
 Space.prototype.setRow = function(row) { this.row = row; };
 Space.prototype.setCol = function(col) { this.col = col; };
 
-/* piece is either null or a pieceMan object */
+/* Throws exception if piece is none of PieceMan, PieceKing or null */
 Space.prototype.setPiece = function(piece) {
     // Exception
     if (!(piece instanceof PieceMan) && piece !== null) {
