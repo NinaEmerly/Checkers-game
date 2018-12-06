@@ -8,12 +8,13 @@
 */
 function Space(row, col, board) {
     board_col = Math.floor(col/2);
-    board[row][board_col] = this;                       // Register this Space on board
-    this.row = row;                                     // integer horizontal position on board
-    this.col = board_col;                               // integer vertical position on board
-    this.occupiedOwn = false;                           // boolean, space is occupied by own piece
-    this.occupiedOpp = false;                           // boolean, space is occupied by opponent's piece
-    this.available = true;                              // boolean, space is unoccupied
+    board[row][board_col] = this;                               // Register this Space on board
+    this.row = row;                                             // integer horizontal position on board
+    this.col = board_col;                                       // integer vertical position on board
+    this.occupiedOwn = false;                                   // boolean, space is occupied by own piece
+    this.occupiedOpp = false;                                   // boolean, space is occupied by opponent's piece
+    this.available = true;                                      // boolean, space is unoccupied
+    this.piece = null;                                          // PieceObject that occupies this space, if any
     
     var ur_row = row + 1;
     var ur_col = col + 1;
@@ -23,12 +24,8 @@ function Space(row, col, board) {
     var ul_Space = getNeighbor(ur_row, ll_col, board);
     var ll_Space = getNeighbor(ll_row, ll_col, board);
     var lr_Space = getNeighbor(ll_row, ur_col, board);
-    var temp = [ur_Space, ul_Space, ll_Space, lr_Space];
-    this.neighbors = temp.filter(notNull);              // array of references to adjacent spaces [ur, ul, ll, lr]
+    this.neighbors = [ur_Space, ul_Space, ll_Space, lr_Space];  // array of references to adjacent spaces [ur, ul, ll, lr]
 }
-
-/* Used as a filter to remove null elements from neighbors */
-function notNull(elem) { return elem !== null; }
 
 /* Space getters */
 Space.prototype.getRow = function() { return this.row; };
@@ -37,10 +34,32 @@ Space.prototype.getNeighbors = function() { return this.neighbors; };
 Space.prototype.getOccupiedOwn = function() { return this.occupiedOwn; };
 Space.prototype.getOccupiedOpp = function() { return this.occupiedOpp; };
 Space.prototype.getAvailable = function() { return this.available; };
+Space.prototype.getPiece = function() { return this.piece; };
 
 /* Space setters */
 Space.prototype.setRow = function(row) { this.row = row; };
 Space.prototype.setCol = function(col) { this.col = col; };
+
+/* piece is either null or a pieceMan object */
+Space.prototype.setPiece = function(piece) {
+    if (piece instanceof PieceMan) {    // If piece is a man or a king (inherited man), not null
+        this.piece = piece;
+        if (piece.own) {
+            this.toggleOccupiedOwn();
+        } else {
+            this.toggleOccupiedOpp();
+        }
+    } else if (piece === null) {
+        if (this.piece instanceof PieceMan) {
+            if (this.piece.own) {
+                this.toggleOccupiedOwn();
+            } else if (!this.piece.own) {
+                this.toggleOccupiedOpp();
+            }
+        }
+        this.piece = piece;
+    } else {console.log("Ignored to attempt set piece of Space: " + this + " to: " + piece)}
+};
 Space.prototype.setNeighbors = function(ur, ul, ll, lr) {
         this.neighbors.splice(0, this.neighbors.length, ur, ul, ll, lr);
 };
@@ -55,14 +74,6 @@ Space.prototype.toggleOccupiedOpp = function() {
     this.occupiedOpp = !this.occupiedOpp;
 };
 
-/* Description: validMoves returns valid destinations provided with an origin 'pos'
-candidate destinations are checked whether they are on the board and whether they are available
-Parameter pos: an array of two integer elements: [row, column] 
-Returns: An array of valid destinations */
-Space.prototype.validMoves = function() {
-    //TODO
-}
-
 /*
 * validSpace checks if a given position is on a 8x8 checkerboard
 * Parameter row: integer horizontal position
@@ -70,7 +81,7 @@ Space.prototype.validMoves = function() {
 * Returns: boolean. true if position is a valid space, else false
 */
 function validSpace(row, board_col) {
-    if(row < 0 || row >= hor || board_col < 0 || board_col >= ver) {
+    if(row < 0 || row >= ver || board_col < 0 || board_col >= hor) {
         return false;
     } else return true;
 }
@@ -86,7 +97,6 @@ function validSpace(row, board_col) {
 * If the element is still empty, create and return a new Space object
 */
 function getNeighbor(row, col, board) {
-    console.log(row, col)
     var board_col = Math.floor(col/2);
     if (!validSpace(row, board_col)) {
         return null;
