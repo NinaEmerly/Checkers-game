@@ -2,6 +2,7 @@
 var ver = 8;    // Number of rows
 var hor = 4;    // Number of columns/2 (this initializes a 8x8 board)
 var lines = 3;  // Number of lines of pieces each player starts out with (maximum: ver/2-1)
+var takenOwn, takenOpp = 0;     // takenOwn keeps count of own piece's taken off board, takenOpp keeps count of opponent's taken off board
 
 /* 
 * Constructor of Game object
@@ -18,7 +19,7 @@ function Game() {
         this.board.push(new Array(hor));
     }
     
-    new Space(ver/2, hor-1, this.board);        // Generate a network of Space objects and populate the board with them
+    new Space(0, 1, this.board);        // Generate a network of Space objects and populate the board with them
 
     for (row=0; row<lines; row++) {             // Create all pieces on own side
         for (col=0; col<hor; col++) {
@@ -39,6 +40,15 @@ function Game() {
 Game.prototype.getBoard = function() { return this.board; };
 Game.prototype.getSpace = function(row, col) { return this.board[row][col]; };
 Game.prototype.getPiece = function(row, col) { return this.board[row][col].getPiece(); };
+
+/* Game setters */
+Game.prototype.setPiece = function(row, col, piece) {
+    var space = this.getSpace(row, col);
+    if (!space.available) {                     // If this space is occupied
+        space.getPiece().setSpace(null);        // Move the occupying piece off the board            
+    }
+    space.setPiece(piece);                      // Put the piece on the space
+}
 
 /*
 *   movePiece removes the provided piece object from its prior space,
