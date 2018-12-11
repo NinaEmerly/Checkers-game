@@ -1,0 +1,24 @@
+{
+  "name": "Wireframe",
+  "version": "1.0.0",
+  "description": "Hello World!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NinaEmerly/Wireframe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NinaEmerly/Wireframe/issues"
+  },
+  "homepage": "https://github.com/NinaEmerly/Wireframe#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "websocket": "^1.0.28"
+  }
+}
