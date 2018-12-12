@@ -2,9 +2,10 @@
 var express = require("express");
 var websocket = require("ws");
 var http    = require("http");
+
+var indexRouter = require("./routes");
 /*TODO
-var indexRouter = require("./routes/index");
-var messages = require("./public/javascripts/messages");
+var messages = require("./static/scripts/messages");
 */
 var gameStatus = require("./statTracker");
 var Game = require("./game");
@@ -16,7 +17,7 @@ var port = process.argv[2];             // Which port to listen to
 var app = express();
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/static"));
-app.get("/play", indexRouter);
+app.get("/game", indexRouter);
 /*TODO: splash.ejs
 app.get("/", (req, res) => {
     res.render("splash.ejs", { onlinePlayers: gameStatus.onlinePlayers, ongoingGames: gameStatus.ongoingGames, enqueuedPlayers: gameStatus.enqueuedPlayers });
@@ -58,8 +59,7 @@ wss.on("connection", function connection(ws) {
     /* Two-player game: every two players are added to the same game */
     let con = ws;                       // Copy the websocket to a local variable
     con.id  = connectionID++;           // Set a unique id
-    let playerType      = currentGame.addPlayer(con);   // Adds websocket to current game
-    // playerType is A if the websocket became player A, or "B" if it became player B
+    let playerType      = currentGame.addPlayer(con);   // Adds websocket to current game. playerType is "A" or "B" depending on which was assigned to socket
     websockets[con.id]  = currentGame;  // Add the game object to the websockets array at the index of the player's id
 
     console.log("Player %s placed in game %s as %s", con.id, currentGame.id, playerType);
