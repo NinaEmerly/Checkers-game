@@ -11,9 +11,7 @@ function Space(row, col, board) {
     board[row][board_col] = this;                               // Register this Space on board
     this.row = row;                                             // integer horizontal position on board
     this.col = board_col;                                       // integer vertical position on board
-    this.occupiedOwn = false;                                   // boolean, space is occupied by own piece
-    this.occupiedOpp = false;                                   // boolean, space is occupied by opponent's piece
-    this.available = true;                                      // boolean, space is unoccupied
+    this.occupiedTeam = "NONE";                                 // boolean, space is occupied by own piece
     this.piece = null;                                          // PieceObject that occupies this space, if any
     
     var ur_row = row + 1;
@@ -31,14 +29,14 @@ function Space(row, col, board) {
 Space.prototype.getRow = function() { return this.row; };
 Space.prototype.getCol = function() { return this.col; };
 Space.prototype.getNeighbors = function() { return this.neighbors; };
-Space.prototype.getOccupiedOwn = function() { return this.occupiedOwn; };
-Space.prototype.getOccupiedOpp = function() { return this.occupiedOpp; };
+Space.prototype.getOccupiedTeam = function() {return this.occupiedTeam; }; 
 Space.prototype.getAvailable = function() { return this.available; };
 Space.prototype.getPiece = function() { return this.piece; };
 
 /* Space setters */
 Space.prototype.setRow = function(row) { this.row = row; };
 Space.prototype.setCol = function(col) { this.col = col; };
+Space.prototype.setOccupiedTeam = function(team) { this.occupiedTeam = team };
 
 /* Throws exception if piece is none of PieceMan, PieceKing or null */
 Space.prototype.setPiece = function(piece) {
@@ -48,31 +46,17 @@ Space.prototype.setPiece = function(piece) {
     }
 
     if (piece instanceof PieceMan) {        // If a new piece is set in this space
-        this.occupiedOwn = piece.own;       // Update relevant information
-        this.occupiedOpp = !piece.own;
-        this.available = false;
+        this.occupiedTeam = piece.getTeam();
     } else if (piece === null) {            // Else if this space is cleared
-        this.occupiedOwn = false;           // Update relevant information
-        this.occupiedOpp = false;
-        this.available = true;
+        this.occupiedTeam = "NONE";
     }
-    this.piece = piece;                     // The new piece is moved in this space
+    this.piece = piece;                     // The "null piece" is moved in this space
     if (piece instanceof PieceMan && this.piece.getSpace() !== this) {   // (This line to prevent an infinite loop)
         this.piece.setSpace(this);          // Bind this space to new piece
     }
 };
 Space.prototype.setNeighbors = function(ur, ul, ll, lr) {
         this.neighbors.splice(0, this.neighbors.length, ur, ul, ll, lr);
-};
-
-/* Space togglers */
-Space.prototype.toggleOccupiedOwn = function() {
-    this.available = this.occupiedOwn;
-    this.occupiedOwn = !this.occupiedOwn;
-};
-Space.prototype.toggleOccupiedOpp = function() {
-    this.available = this.occupiedOpp;
-    this.occupiedOpp = !this.occupiedOpp;
 };
 
 /*

@@ -56,7 +56,7 @@ PieceMan.prototype.validMoves = function() {
         }
 
         // Case 2: neighbor is unoccupied
-        if (neighbor.getAvailable()) {
+        if (neighbor.getOccupiedTeam() == "NONE") {
             validMoves.push(new Move(neighbor, false, null));           // Add this neighbor to valid moves
             continue;                                                   // Go to next neighbor
         }
