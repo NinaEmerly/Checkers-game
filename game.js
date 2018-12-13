@@ -197,7 +197,7 @@ Game.prototype.movePiece = function(piece, destination) {
     piece.movePiece(destination);
 }
 
-module.exports = game;              // Make this file available as a module to other files
+module.exports = Game;              // Make this file available as a module to other files
 
 
 
