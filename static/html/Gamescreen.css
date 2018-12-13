@@ -9,8 +9,14 @@ p {
 main {
     color: black; 
     background-color: white; 
+    font-size: 18px; 
 }
 
 body {
-    background: #FF678C91; 
+    background: #678C91; 
+    font-family: Arial; 
+}
+
+h2.opponent {
+    float: right; 
 }
