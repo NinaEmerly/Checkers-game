@@ -8,7 +8,7 @@ var indexRouter = require("./routes");
 var messages = require("./static/scripts/messages");
 */
 var gameStatus = require("./statTracker");
-var Game = require("./Game");
+var Game = require("./game");
 
 // Command line argument
 var port = process.argv[2];             // Which port to listen to

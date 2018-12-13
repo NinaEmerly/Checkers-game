@@ -1,4 +1,4 @@
-var Game = require('/Game');
+var Game = require('./game');
 
 /*
 *   Constructs a PieceMan object: gamepiece which is a man
