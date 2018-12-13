@@ -24,49 +24,11 @@
                 <br>
             </div>
 
-           <form method="dialog">
-               <p>Link to friend to play together</p>
-               <p>Shareable link</p>
-               <input type="text" name="ShareableLink" value="ShareableLink" id="ShareableLink"> <!-- input to add a box around link-->
-               <button onclick="copyToClipboard()">Copy</button>
-           </form>
-
-           <form method="dialog">
-               <p>Queue for a random game</p>
-               <input type="text" name="PlayersOnline" value="2134 Players Online" id="PlayersOnline">
-               <button>Quick Play</button>
-           </form>
-            <!-- JAVASCRIPT FOR DIALOGUE WINDOWS-->
-
             <button>FORFEIT</button> <!-- buttons to be detailed in javascript-->
-
-            <form action="/chat.php" method="post">
-                <div>
-                  <input type "text" name="chat" placeholder="Say Something...">
-                  <button type="submit">Chat!</button>
-                </div>
-              </form>
         </main>
-        <script>
-        function copyToClipboard() {
-            /* Get the text field */
-            var copyText = document.getElementById("ShareableLink");
-        
-            /* Select the text field */
-            copyText.select();
-        
-            /* Copy the text inside the text field */
-            document.execCommand("copy");
-        }
-        </script>
     </body>
 
     <footer>
         <p>"Player 1's" turn</p>
     </footer>
-    <script src="scripts/move.js"></script>
-    <script src="scripts/pieceMan.js"></script>
-    <script src="scripts/pieceKing.js"></script>
-    <script src="scripts/space.js"></script>
-    <script src="scripts/game.js"></script>
 </html>
