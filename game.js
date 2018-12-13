@@ -1,4 +1,4 @@
-/*  Serve- Side
+/*  Serve-Side
  * Constructor of Game object
  * Game initializes with a checkerboard in starting configuration
  * If, for instance, the game is set to a 8x8 checkerboard, board is a
@@ -43,6 +43,20 @@ var game = function (gameID) {
     }
 
 };
+
+/* Game getters */
+Game.prototype.getBoard = function() { return this.board; };
+Game.prototype.getSpace = function(row, col) { return this.board[row][col]; };
+Game.prototype.getPiece = function(row, col) { return this.board[row][col].getPiece(); };
+
+/* Game setters */
+Game.prototype.setPiece = function(row, col, piece) {
+    var space = this.getSpace(row, col);
+    if (!space.available) {                     // If this space is occupied
+        space.getPiece().setSpace(null);        // Move the occupying piece off the board            
+    }
+    space.setPiece(piece);                      // Put the piece on the space
+}
 
 /*
  *  The game can be in a number of different states
@@ -111,8 +125,8 @@ game.prototype.isValidState = function (s) {
 };
 
 /*
- *  Changes 
- 
+ *  Changes the current game state
+ *  Parameter w: String that is in the transitionStates array. This is the game state you want to transfer to
  */
 game.prototype.setStatus = function (w) {
 
@@ -136,6 +150,10 @@ game.prototype.hasTwoConnectedPlayers = function () {
     return (this.gameState == "2 JOINED");
 };
 
+/*
+ *  Adds a player to the game
+ *  Parameter p: a websocket that connects the player
+ */
 game.prototype.addPlayer = function (p) {
 
     // Assert that the parameter is an object
@@ -161,26 +179,6 @@ game.prototype.addPlayer = function (p) {
     }
 };
 
-module.exports = game;              // Make this file available as a module to other files
-
-// FROM HERE ON, THE CODE WAS COPIED FROM CLIENTSIDE 
-
-// Global variables (hoisted to the top)
-
-/* Game getters */
-Game.prototype.getBoard = function() { return this.board; };
-Game.prototype.getSpace = function(row, col) { return this.board[row][col]; };
-Game.prototype.getPiece = function(row, col) { return this.board[row][col].getPiece(); };
-
-/* Game setters */
-Game.prototype.setPiece = function(row, col, piece) {
-    var space = this.getSpace(row, col);
-    if (!space.available) {                     // If this space is occupied
-        space.getPiece().setSpace(null);        // Move the occupying piece off the board            
-    }
-    space.setPiece(piece);                      // Put the piece on the space
-}
-
 /*
 *   movePiece removes the provided piece object from its prior space,
 *   and adds it to the destination space. All fields are updated accordingly
@@ -198,3 +196,9 @@ Game.prototype.movePiece = function(piece, destination) {
     // Pass on method
     piece.movePiece(destination);
 }
+
+module.exports = game;              // Make this file available as a module to other files
+
+
+
+
