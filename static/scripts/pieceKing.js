@@ -2,8 +2,8 @@
 *   Constructs a PieceKing: gamepiece which is a king
 *   PieceKing inherits from PieceMan
 */
-function PieceKing(own, space) {
-    PieceMan.call(this, own, space);
+function PieceKing(team, space) {
+    PieceMan.call(this, team, space);
 }
 
 /*  redirect prototype */
@@ -30,7 +30,7 @@ PieceKing.prototype.validMoves = function() {
             neighbor = neighbor.getNeighbors()[i];                      // Go to next neighbor in the same direction
         }
         // The loop encountered an obstruction 
-        // Case 1: neighbor is occupied by own piece or not on the board
+        // Case 1: neighbor is occupied by same team's piece or not on the board
         if (!(neighbor instanceof Space) || neighbor.getOccupiedOwn()) {
             continue;                                                   // Do nothing: neighbor is not a valid move
         }
