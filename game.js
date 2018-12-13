@@ -1,11 +1,11 @@
 /*  Serve-Side
  * Constructor of Game object
  * Game initializes with a checkerboard in starting configuration
- * If, for instance, the game is set to a 8x8 checkerboard, board is a
+ * If, for instance, the Game is set to a 8x8 checkerboard, board is a
  * 8x4 array filled with Space objects.
  * Access a Space object with board[row][Math.floor(col/2)]
 */
-var game = function (gameID) {
+var Game = function (gameID) {
     var i, row, col, space;
 
     this.playerA = null;                            // Set Player A
@@ -61,17 +61,17 @@ Game.prototype.setPiece = function(row, col, piece) {
 /*
  *  The game can be in a number of different states
  */
-game.prototype.transitionStates = {};
-game.prototype.transitionStates["0 JOINED"]  = 0;
-game.prototype.transitionStates["1 JOINED"]  = 1;
-game.prototype.transitionStates["2 JOINED"]  = 2;
-game.prototype.transitionStates["A MOVE"]   = 3;
-game.prototype.transitionStates["B MOVE"]   = 4;
-game.prototype.transitionStates["A WINS"]   = 5;
-game.prototype.transitionStates["B WINS"]   = 6;
-game.prototype.transitionStates["ABORTED"]  = 7;
+Game.prototype.transitionStates = {};
+Game.prototype.transitionStates["0 JOINED"]  = 0;
+Game.prototype.transitionStates["1 JOINED"]  = 1;
+Game.prototype.transitionStates["2 JOINED"]  = 2;
+Game.prototype.transitionStates["A MOVE"]   = 3;
+Game.prototype.transitionStates["B MOVE"]   = 4;
+Game.prototype.transitionStates["A WINS"]   = 5;
+Game.prototype.transitionStates["B WINS"]   = 6;
+Game.prototype.transitionStates["ABORTED"]  = 7;
 
-game.prototype.transitionMatrix = [
+Game.prototype.transitionMatrix = [
     [0, 1, 0, 0, 0, 0, 0, 0],   // 0 JOINT
     [1, 0, 1, 0, 0, 0, 0, 0],   // 1 JOINT
     [0, 0, 0, 1, 1, 0, 0, 0],   // 2 JOINT
@@ -86,7 +86,7 @@ game.prototype.transitionMatrix = [
  *  Accepts two strings as transition states and returns a boolean on whether 'from' can transition to 'to'
  */
 
-game.prototype.isValidTransition = function (from, to) {
+Game.prototype.isValidTransition = function (from, to) {
 
     // Assert that the parameters are string objects
     console.assert(typeof from == "string",
@@ -95,47 +95,47 @@ game.prototype.isValidTransition = function (from, to) {
         "%s: Expecting a string, got a %s", arguments.callee.name, typeof to);
 
     // Assert that the parameters are valid transition states
-    console.assert(from in game.prototype.transitionStates == true,
+    console.assert(from in Game.prototype.transitionStates == true,
         "%s: Expecting %s to be a valid transition state", arguments.callee.name, from);
-    console.assert(to in game.prototype.transitionStates == true,
+    console.assert(to in Game.prototype.transitionStates == true,
         "%s: Expecting %s to be a valid transition state", arguments.callee.name, to);
     
     // Define i, j. i is the row, and j the column in the transition matrix
     let i, j;
-    if (! (from in game.prototype.transitionStates)) {  // if 'from' not a valid transition state
+    if (! (from in Game.prototype.transitionStates)) {  // if 'from' not a valid transition state
         return false;                                   // return false
     } else {
-        i = game.prototype.transitionStates[from];      // i is the row
+        i = Game.prototype.transitionStates[from];      // i is the row
     }
 
-    if (!(to in game.prototype.transitionStates)) {     // if 'to' not a valid transition state
+    if (!(to in Game.prototype.transitionStates)) {     // if 'to' not a valid transition state
         return false;                                   // return false
     } else {
-        j = game.prototype.transitionStates[to];        // else, j is the column
+        j = Game.prototype.transitionStates[to];        // else, j is the column
     }
 
-    return (game.prototype.transitionMatrix[i][j] > 0); // return true or false depending on the corresponding element in the transition matrix
+    return (Game.prototype.transitionMatrix[i][j] > 0); // return true or false depending on the corresponding element in the transition matrix
 };
 
 /*
  *  Returns a boolean on whether the parameter is a valid transition state
  */
-game.prototype.isValidState = function (s) {
-    return (s in game.prototype.transitionStates);
+Game.prototype.isValidState = function (s) {
+    return (s in Game.prototype.transitionStates);
 };
 
 /*
  *  Changes the current game state
  *  Parameter w: String that is in the transitionStates array. This is the game state you want to transfer to
  */
-game.prototype.setStatus = function (w) {
+Game.prototype.setStatus = function (w) {
 
     // Assert that the parameter is a string object
     console.assert(typeof w == "string",
         "%s: Expecting a string, got a %s", arguments.callee.name, typeof w);
     
     // Check if parameter is a valid transition state and if the current gamestate can transition into the parameter
-    if (game.prototype.isValidState(w) && game.prototype.isValidTransition(this.gameState, w)) {
+    if (Game.prototype.isValidState(w) && Game.prototype.isValidTransition(this.gameState, w)) {
         this.gameState = w;                             // If so, change the game's gameState
         console.log("[STATUS] %s", this.gameState);
     } else {                                            // Else, raise an error
@@ -146,7 +146,7 @@ game.prototype.setStatus = function (w) {
 /*
  *  Returns boolean value on whether this game currently has two connected players
  */
-game.prototype.hasTwoConnectedPlayers = function () {
+Game.prototype.hasTwoConnectedPlayers = function () {
     return (this.gameState == "2 JOINED");
 };
 
@@ -154,7 +154,7 @@ game.prototype.hasTwoConnectedPlayers = function () {
  *  Adds a player to the game
  *  Parameter p: a websocket that connects the player
  */
-game.prototype.addPlayer = function (p) {
+Game.prototype.addPlayer = function (p) {
 
     // Assert that the parameter is an object
     console.assert(p instanceof Object, "%s: Expecting an object (WebSocket), got a %s", arguments.callee.name, typeof p);
