@@ -3,12 +3,17 @@ var express = require("express");
 var websocket = require("ws");
 var http    = require("http");
 
+var Space       = require("./gamescripts/space");
+var Game        = require("./gamescripts/game");
+var Move        = require("./gamescripts/move");
+var PieceMan    = require("./gamescripts/pieceMan");
+var PieceKing   = require("./gamescripts/pieceKing");
+
 var indexRouter = require("./routes");
 /*TODO
 var messages = require("./static/scripts/messages");
 */
 var gameStatus = require("./statTracker");
-var Game = require("./game");
 
 // Command line argument
 var port = process.argv[2];             // Which port to listen to
@@ -46,7 +51,7 @@ setInterval(function() {
             }
         }
     }
-}, 50000);
+}, 60000);
 
 var currentGame = new Game(gameStatus.gamesInitialized++);  // Initialize a game object with a unique id
 var connectionID = 0;                                       // Initialize a global variable that tracks a unique id for each websocket
