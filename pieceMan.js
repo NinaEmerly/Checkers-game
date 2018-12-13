@@ -8,10 +8,10 @@
 */
 function PieceMan(team, space) {
     this.team = team;
-    if (team == "A") {
-        this.other == "B";
+    if (team === "A") {
+        this.other === "B";
     } else {
-        this.other == "A";
+        this.other === "A";
     }
     this.setSpace(space);
 }
@@ -51,12 +51,12 @@ PieceMan.prototype.validMoves = function() {
         neighbor = this.space.neighbors[i];
 
         // Case 1: neighbor is occupied by same team's piece or not on board
-        if (!(neighbor instanceof Space) || neighbor.getOccupiedTeam() == this.team) {
+        if (!(neighbor instanceof Space) || neighbor.getOccupiedTeam() === this.team) {
             continue;                                                   // Do nothing: neighbor is not a valid move
         }
 
         // Case 2: neighbor is unoccupied
-        if (neighbor.getOccupiedTeam() == "NONE") {
+        if (neighbor.getOccupiedTeam() === "NONE") {
             validMoves.push(new Move(neighbor, false, null));           // Add this neighbor to valid moves
             continue;                                                   // Go to next neighbor
         }
@@ -70,12 +70,12 @@ PieceMan.prototype.validMoves = function() {
             continue;                                                   // Do nothing: neighbor is not a valid move
         }
         // Case 3: neighbor is occupied by opponent's piece
-        if (neighbor.getOccupiedTeam() == this.other) {
-            takenPiece = neighbor.getPiece();                           // Save a reference to opponent's piece that can be taken with this move
-            neighbor = neighbor.getNeighbors()[i];                      // Go to next conjunct space   
-            if (neighbor instanceof Space && neighbor.getAvailable()) { // If conjunct space is unoccupied and on the board
-                validMoves.push(new Move(neighbor, true, takenPiece));  // Add the conjunt neighbor to valid moves and pass a reference to taken piece
-            }                                                           // Else do nothing: neighbor is not a valid move
+        if (neighbor.getOccupiedTeam() === this.other) {
+            takenPiece = neighbor.getPiece();                                           // Save a reference to opponent's piece that can be taken with this move
+            neighbor = neighbor.getNeighbors()[i];                                      // Go to next conjunct space   
+            if (neighbor instanceof Space && neighbor.getOccupiedTeam() === "NONE") {    // If conjunct space is unoccupied and on the board
+                validMoves.push(new Move(neighbor, true, takenPiece));                  // Add the conjunt neighbor to valid moves and pass a reference to taken piece
+            }                                                                           // Else do nothing: neighbor is not a valid move
         }
     }
     return validMoves;

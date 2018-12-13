@@ -2,8 +2,8 @@
 *   Constructs a PieceKing: gamepiece which is a king
 *   PieceKing inherits from PieceMan
 */
-function PieceKing(team, space) {
-    PieceMan.call(this, team, space);
+function PieceKing(team, other, space) {
+    PieceMan.call(this, team, other, space);
 }
 
 /*  redirect prototype */
@@ -25,20 +25,20 @@ PieceKing.prototype.validMoves = function() {
         neighbor = this.space.neighbors[i];                             // 'neighbor' is the closest space in that direction
 
         // Add all unoccupied spaces in that direction to valid moves
-        while (neighbor instanceof Space && neighbor.getAvailable()) {  // While neighbor is a space on the board and unoccupied
+        while (neighbor instanceof Space && neighbor.getOccupiedTeam() === "NONE") {  // While neighbor is a space on the board and unoccupied
             validMoves.push(new Move(neighbor, false, null))            // Add this neighbor to valid moves
             neighbor = neighbor.getNeighbors()[i];                      // Go to next neighbor in the same direction
         }
         // The loop encountered an obstruction 
         // Case 1: neighbor is occupied by same team's piece or not on the board
-        if (!(neighbor instanceof Space) || neighbor.getOccupiedOwn()) {
+        if (!(neighbor instanceof Space) || neighbor.getOccupiedTeam() === this.team) {
             continue;                                                   // Do nothing: neighbor is not a valid move
         }
         // Case 2: neighbor is occupied by opponent's piece
-        if (neighbor.getOccupiedOpp()) {
+        if (neighbor.getOccupiedTeam() === this.other) {
             takenPiece = neighbor.getPiece();
             neighbor = neighbor.getNeighbors()[i];
-            if (neighbor instanceof Space && neighbor.getAvailable()) { // If neighbor is unoccupied and on the board
+            if (neighbor instanceof Space && neighbor.getOccupiedTeam() === "NONE") { // If neighbor is unoccupied and on the board
                 validMoves.push(new Move(neighbor, true, takenPiece))   // Add the conjunt neighbor to valid moves
             } else continue;                                            // Else do nothing: neighbor is not a valid move
         }
