@@ -9,9 +9,9 @@
 function PieceMan(team, space) {
     this.team = team;
     if (team === "A") {
-        this.other === "B";
+        this.other = "B";
     } else {
-        this.other === "A";
+        this.other = "A";
     }
     this.setSpace(space);
 }

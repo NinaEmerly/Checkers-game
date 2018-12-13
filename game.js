@@ -13,6 +13,11 @@ var game = function (gameID) {
     this.id = gameID;                               // Set unique gameID
     this.gameState = "0 JOINED";                    // Initialize gamestate
 
+    ver = 8;                                        // Number of rows
+    hor = 4;                                        // Number of columns/2 (this initializes a 8x8 board)
+    lines = 3;                                      // Number of lines of pieces each player starts out with (maximum: ver/2-1)
+    takenOwn, takenOpp = 0;                         // takenOwn keeps count of own piece's taken off board, takenOpp keeps count of opponent's taken off board
+
     // Initialize an empty board hor x ver (8x4)
     this.board = new Array(0);
     for (i = 0; i < ver; i++) {
@@ -106,7 +111,8 @@ game.prototype.isValidState = function (s) {
 };
 
 /*
- * 
+ *  Changes 
+ 
  */
 game.prototype.setStatus = function (w) {
 
@@ -160,10 +166,6 @@ module.exports = game;              // Make this file available as a module to o
 // FROM HERE ON, THE CODE WAS COPIED FROM CLIENTSIDE 
 
 // Global variables (hoisted to the top)
-var ver = 8;    // Number of rows
-var hor = 4;    // Number of columns/2 (this initializes a 8x8 board)
-var lines = 3;  // Number of lines of pieces each player starts out with (maximum: ver/2-1)
-var takenOwn, takenOpp = 0;     // takenOwn keeps count of own piece's taken off board, takenOpp keeps count of opponent's taken off board
 
 /* Game getters */
 Game.prototype.getBoard = function() { return this.board; };
