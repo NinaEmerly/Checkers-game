@@ -1,7 +1,7 @@
 module.exports = function(app) {
 
     /* Route 1: /splash */
-    app.get('/(splash)?', function(req, res) {
+    app.get('/splash', function(req, res) {
         res.sendFile("splash.html", {root: "./static/html"});
     })
 

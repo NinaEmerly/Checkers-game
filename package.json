@@ -19,6 +19,7 @@
   "homepage": "https://github.com/NinaEmerly/Wireframe#readme",
   "dependencies": {
     "express": "^4.16.4",
-    "websocket": "^1.0.28"
+    "websocket": "^1.0.28",
+    "ws": "^6.1.2"
   }
 }

@@ -17,7 +17,7 @@ var port = process.argv[2];             // Which port to listen to
 var app = express();
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/static"));
-app.get("/(splash)?", indexRouter);
+app.get("/splash", indexRouter);
 app.get("/game", indexRouter);
 /*TODO: splash.ejs
 app.get("/", (req, res) => {
