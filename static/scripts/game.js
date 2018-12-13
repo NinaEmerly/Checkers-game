@@ -25,14 +25,14 @@ function Game() {
     for (row = 0; row < lines; row++) {             // Create all pieces on own side
         for (col = 0; col < hor; col++) {
             space = this.getSpace(row, col);
-            space.setPiece(new PieceMan(true, space));
+            space.setPiece(new PieceMan("A", space));
         }
     }
     console.log(this.board);
     for (row = ver-lines; row < ver; row++) {       // Create all pieces on opponent's side
         for (col = 0; col < hor; col++) {
             space = this.getSpace(row, col);
-            space.setPiece(new PieceMan(false, space));
+            space.setPiece(new PieceMan("B", space));
         }
     }
 };
