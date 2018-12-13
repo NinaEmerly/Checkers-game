@@ -1,4 +1,4 @@
-h1 {
+h1 {                                /* afkappen woorden als ze te lang worden */ 
     color: white; 
 } 
 
@@ -7,21 +7,33 @@ body {
     font-family: Arial; 
 }
 
-.opponent {
-    float: right; 
-    border-style: solid;
-    border-color: white; 
-    background-color: white; 
-}
-
 .own {
     float: left;
     border-style: solid;
     border-color: white;
     background-color: white; 
+    border-width: 2px 40px 4px 15px;
+}
+
+.opponent {
+    float: right; 
+    border-style: solid;
+    border-color: white; 
+    background-color: white;
+    border-width: 2px 40px 4px 15px;  
+}
+
+button {
+    float: right;
+    background-color: white;
+    position: absolute; 
+    right: 5px;
+    top: 30px; 
 }
 
 footer {
     color: white; 
-    float: right; 
+    text-align: center; 
+    position: relative; 
+    top: 600px;  
 }
