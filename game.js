@@ -177,6 +177,7 @@ Game.prototype.setPiece = function(row, col, piece) {
         space.getPiece().setSpace(null);        // Move the occupying piece off the board            
     }
     space.setPiece(piece);                      // Put the piece on the space
+}
 
 /*
 *   movePiece removes the provided piece object from its prior space,
