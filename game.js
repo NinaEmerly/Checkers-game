@@ -16,7 +16,8 @@ var Game = function (gameID) {
     ver = 8;                                        // Number of rows
     hor = 4;                                        // Number of columns/2 (this initializes a 8x8 board)
     lines = 3;                                      // Number of lines of pieces each player starts out with (maximum: ver/2-1)
-    takenOwn, takenOpp = 0;                         // takenOwn keeps count of own piece's taken off board, takenOpp keeps count of opponent's taken off board
+    this.takenA = 0;                                // takenOpp keeps count of opponent's taken off board
+    this.takenB = 0;                                // takenOwn keeps count of own piece's taken off board
 
     // Initialize an empty board hor x ver (8x4)
     this.board = new Array(0);

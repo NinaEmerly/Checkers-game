@@ -1,3 +1,5 @@
+var Game = require('/game');
+
 /*
 *   Constructs a PieceMan object: gamepiece which is a man
 *   Prototype of this object is inherited by gamepiece king
@@ -109,7 +111,11 @@ PieceMan.prototype.movePiece = function(destination) {
     if (move.take === true) {                               // If a piece is taken during this move
         move.getTakenPiece().getSpace().setPiece(null);     // Clear the piece off the board
         move.getTakenPiece().setSpace(null)                 // Clear the board off the piece
-        takenOpp++;                                         // Increase counter
+        if (this.team === "A") {
+            Game.takenB++;
+        } else {
+            Game.takenA++;
+        }
     }
     this.space.setPiece(null);                              // Clear the piece's prior space
     destination.setPiece(this);                             // Move the piece in new space
