@@ -1,21 +1,21 @@
 /*
 *   Constructs a PieceMan object: gamepiece which is a man
 *   Prototype of this object is inherited by gamepiece king
-*   Parameter own: boolean, true if owned, else false if opponent's
+*   Parameter team: Character, "A" if player A's, "B" if player B's
 *   Parameter space: Space object, location of this piece on the board.
 *   The Space object which this piece references will refer this piece as well
 */
-function PieceMan(own, space) {
-    this.own = own;
+function PieceMan(team, space) {
+    this.team = team;
     this.setSpace(space);
 }
 
 /* PieceMan getters */
-PieceMan.prototype.getOwn = function() { return this.own; };
+PieceMan.prototype.getTeam = function() { return this.team; };
 PieceMan.prototype.getSpace = function() { return this.space; };
 
 /* PieceMan setters */
-PieceMan.prototype.setOwn = function(own) { this.own = own; };
+PieceMan.prototype.setTeam = function(team) { this.team = team; };
 PieceMan.prototype.setSpace = function(space) {
     this.space = space;                         // The piece is moved into this space
     if (this.space instanceof Space) {          // If the new space is a Space object (not null)
@@ -42,7 +42,7 @@ PieceMan.prototype.validMoves = function() {
     for (i=0; i<=1; i++) {
         neighbor = this.space.neighbors[i];
 
-        // Case 1: neighbor is occupied by own piece or not on board
+        // Case 1: neighbor is occupied by same team's piece or not on board
         if (!(neighbor instanceof Space) || neighbor.getOccupiedOwn()) {
             continue;                                                   // Do nothing: neighbor is not a valid move
         }
@@ -126,7 +126,7 @@ PieceMan.prototype.crown = function() {
     }
 
     // Method
-    king = new PieceKing(this.own, null);
+    king = new PieceKing(this.team, null);
     king.setSpace(this.space);              // Binds new king to this piece's space
     this.space = null;                      // Disconnect this piece from board
     return king;

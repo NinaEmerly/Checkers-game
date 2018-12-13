@@ -1,20 +1,51 @@
-/*
- *  Constructor of the game object
- */
+/*  Serve- Side
+ * Constructor of Game object
+ * Game initializes with a checkerboard in starting configuration
+ * If, for instance, the game is set to a 8x8 checkerboard, board is a
+ * 8x4 array filled with Space objects.
+ * Access a Space object with board[row][Math.floor(col/2)]
+*/
 var game = function (gameID) {
-    this.playerA = null;
-    this.playerB = null;
-    this.id = gameID;
-    this.gameState = "0 JOINT";
+    var i, row, col, space;
+
+    this.playerA = null;                            // Set Player A
+    this.playerB = null;                            // Set Player B
+    this.id = gameID;                               // Set unique gameID
+    this.gameState = "0 JOINED";                    // Initialize gamestate
+
+    // Initialize an empty board hor x ver (8x4)
+    this.board = new Array(0);
+    for (i = 0; i < ver; i++) {
+        this.board.push(new Array(hor));
+    }
+
+    // Fill the board with spaces   
+    new Space(0, 1, this.board);                    // Generate a network of Space objects and populate the board with them
+
+    // Fill the spaces with pieces    
+    for (row = 0; row < lines; row++) {             // Create all pieces on own side
+        for (col = 0; col < hor; col++) {
+            space = this.getSpace(row, col);
+            space.setPiece(new PieceMan("A", space));
+        }
+    }
+    console.log(this.board);
+    for (row = ver-lines; row < ver; row++) {       // Create all pieces on opponent's side
+        for (col = 0; col < hor; col++) {
+            space = this.getSpace(row, col);
+            space.setPiece(new PieceMan("B", space));
+        }
+    }
+
 };
 
 /*
  *  The game can be in a number of different states
  */
 game.prototype.transitionStates = {};
-game.prototype.transitionStates["0 JOINT"]  = 0;
-game.prototype.transitionStates["1 JOINT"]  = 1;
-game.prototype.transitionStates["2 JOINT"]  = 2;
+game.prototype.transitionStates["0 JOINED"]  = 0;
+game.prototype.transitionStates["1 JOINED"]  = 1;
+game.prototype.transitionStates["2 JOINED"]  = 2;
 game.prototype.transitionStates["A MOVE"]   = 3;
 game.prototype.transitionStates["B MOVE"]   = 4;
 game.prototype.transitionStates["A WINS"]   = 5;
@@ -96,7 +127,7 @@ game.prototype.setStatus = function (w) {
  *  Returns boolean value on whether this game currently has two connected players
  */
 game.prototype.hasTwoConnectedPlayers = function () {
-    return (this.gameState == "2 JOINT");
+    return (this.gameState == "2 JOINED");
 };
 
 game.prototype.addPlayer = function (p) {
@@ -105,14 +136,14 @@ game.prototype.addPlayer = function (p) {
     console.assert(p instanceof Object, "%s: Expecting an object (WebSocket), got a %s", arguments.callee.name, typeof p);
 
     // Exception if there are not 0 or 1 players connected
-    if (this.gameState != "0 JOINT" && this.gameState != "1 JOINT") {
+    if (this.gameState != "0 JOINED" && this.gameState != "1 JOINT") {
         return new Error("Invalid call to addPlayer, current state is %s", this.gameState);
     }
 
     // Revise the game state
-    var error = this.setStatus("1 JOINT");
+    var error = this.setStatus("1 JOINED");
     if(error instanceof Error) {
-        this.setStatus("2 JOINT");
+        this.setStatus("2 JOINED");
     }
 
     if (this.playerA == null) {     // If there is no player A yet
@@ -125,3 +156,12 @@ game.prototype.addPlayer = function (p) {
 };
 
 module.exports = game;              // Make this file available as a module to other files
+
+// FROM HERE ON, THE CODE WAS COPIED FROM CLIENTSIDE 
+
+// Global variables (hoisted to the top)
+var ver = 8;    // Number of rows
+var hor = 4;    // Number of columns/2 (this initializes a 8x8 board)
+var lines = 3;  // Number of lines of pieces each player starts out with (maximum: ver/2-1)
+var takenOwn, takenOpp = 0;     // takenOwn keeps count of own piece's taken off board, takenOpp keeps count of opponent's taken off board
+

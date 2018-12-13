@@ -1,3 +1,4 @@
+// Client-side
 // Global variables
 var ver = 8;    // Number of rows
 var hor = 4;    // Number of columns/2 (this initializes a 8x8 board)
@@ -14,22 +15,22 @@ var takenOwn, takenOpp = 0;     // takenOwn keeps count of own piece's taken off
 function Game() { 
     var i, row, col, space;
 
-    this.board = new Array(0);                  // Initialize an empty board hor x ver (8x4)
-    for (i=0; i<ver; i++) {
+    this.board = new Array(0);                      // Initialize an empty board hor x ver (8x4)
+    for (i = 0; i < ver; i++) {
         this.board.push(new Array(hor));
     }
     
-    new Space(0, 1, this.board);        // Generate a network of Space objects and populate the board with them
+    new Space(0, 1, this.board);                    // Generate a network of Space objects and populate the board with them
 
-    for (row=0; row<lines; row++) {             // Create all pieces on own side
-        for (col=0; col<hor; col++) {
+    for (row = 0; row < lines; row++) {             // Create all pieces on own side
+        for (col = 0; col < hor; col++) {
             space = this.getSpace(row, col);
             space.setPiece(new PieceMan(true, space));
         }
     }
     console.log(this.board);
-    for (row=ver-lines; row<ver; row++) {       // Create all pieces on opponent's side
-        for (col=0; col<hor; col++) {
+    for (row = ver-lines; row < ver; row++) {       // Create all pieces on opponent's side
+        for (col = 0; col < hor; col++) {
             space = this.getSpace(row, col);
             space.setPiece(new PieceMan(false, space));
         }
