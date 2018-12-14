@@ -1,19 +1,15 @@
 // Modules and packages
-var express = require("express");
-var websocket = require("ws");
-var http    = require("http");
+var express     = require("express");
+var websocket   = require("ws");
+var http        = require("http");
 
-var Space       = require("./gamescripts/space");
 var Game        = require("./gamescripts/game");
-var Move        = require("./gamescripts/move");
-var PieceMan    = require("./gamescripts/pieceMan");
-var PieceKing   = require("./gamescripts/pieceKing");
 
 var indexRouter = require("./routes");
 /*TODO
 var messages = require("./static/scripts/messages");
 */
-var gameStatus = require("./statTracker");
+var gameStatus  = require("./statTracker");
 
 // Command line argument
 var port = process.argv[2];             // Which port to listen to
@@ -133,3 +129,12 @@ wss.on("connection", function connection(ws) {
 });
 
 server.listen(port)                     // Receive data
+
+// Debugging
+var PieceMan    = require("./gamescripts/pieceMan");
+var Score       = require("./gamescripts/scoreboard");
+
+g1 = new Game(1);
+king = new PieceMan("B", g1.getSpace(4,2)).crown();
+console.log(g1.toString());
+console.log(g1.getScore());
