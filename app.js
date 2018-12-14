@@ -38,11 +38,11 @@ var websockets = {};
  */
 setInterval(function() {
     for(let i in websockets){
-        if(websockets.hasOwnProperty(i)){
+        if(websockets.hasOwnProperty(i)) {
             let gameObj = websockets[i];
             //if the gameObj has a final status, the game is complete/aborted
             if(gameObj.finalStatus!=null){
-                console.log("\tDeleting element "+i);
+                log("\tDeleting websocket: " + websockets[i]);
                 delete websockets[i];
             }
         }
@@ -51,12 +51,13 @@ setInterval(function() {
 
 var currentGame = new Game(gameStatus.gamesInitialized++);  // Initialize a game object with a unique id
 var connectionID = 0;                                       // Initialize a global variable that tracks a unique id for each websocket
+log("Created new game: ", currentGame.id);
 
 /*
 *   Event: A client connects to the server
 */
 wss.on("connection", function connection(ws) {
-    console.log("Connection state: " + ws.readyState);
+    log("Connection state: ", ws.readyState);
     
     /* Two-player game: every two players are added to the same game */
     let con = ws;                       // Copy the websocket to a local variable
@@ -64,7 +65,10 @@ wss.on("connection", function connection(ws) {
     let playerType      = currentGame.addPlayer(con);   // Adds websocket to current game. playerType is "A" or "B" depending on which was assigned to socket
     websockets[con.id]  = currentGame;  // Add the game object to the websockets array at the index of the player's id
 
-    console.log("Player %s placed in game %s as %s", con.id, currentGame.id, playerType);
+    /* Report to the server console */
+    log("Player connected:\t%s", con.id);
+    log("Joined game:\t%s", currentGame.id);
+    log("as:\tPlayer %s", playerType);
     
     /* Inform the client about its assigned player type */
     /*TODO
@@ -77,6 +81,8 @@ wss.on("connection", function connection(ws) {
      */
     if (currentGame.hasTwoConnectedPlayers()) {
         currentGame = new Game(gameStatus.gamesInitialized++);      // Change global variable and go to next game object
+        logTime();
+        log("Created new game: %s", currentGame.id);
     }
 
     /*
@@ -96,7 +102,7 @@ wss.on("connection", function connection(ws) {
      */
     con.on("close", function (code) {
         
-        console.log(con.id + " disconnected");
+        log(con.id, " disconnected");
 
         if (code == "1001") {   // if closing initiated by the client
             /* If possible, abort the game; if not, the game is already completed */
@@ -114,18 +120,34 @@ wss.on("connection", function connection(ws) {
                     gameObj.playerA.close();
                     gameObj.playerA = null;
                 } catch(e) {
-                    console.log("Player A closing: " + e);
+                    log("Player A closing: ", e);
                 }
 
                 try {
                     gameObj.playerB.close();
                     gameObj.playerB = null;
                 } catch(e) {
-                    console.log("Player B closing: " + e);
+                    log("Player B closing: ", e);
                 }
             }
         }
     });
 });
 
-server.listen(port)                     // Receive data
+function logTime() {
+    let date = new Date();
+    let time = date.getHours().toString().padStart(2, '0');
+    time = time.concat(':' + date.getMinutes().toString().padStart(2, '0'));
+    time = time.concat(':' + date.getSeconds().toString().padStart(2, '0'));
+    process.stdout.write(time + ' | ');
+}
+function log() {
+    let message = new String();
+    for (let i=0; i<arguments.length; i++) {
+        message = message.concat(arguments[i]);
+    }
+    logTime();
+    console.log(message);
+}
+
+server.listen(port)     // Receive data
