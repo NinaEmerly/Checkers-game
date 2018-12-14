@@ -129,12 +129,3 @@ wss.on("connection", function connection(ws) {
 });
 
 server.listen(port)                     // Receive data
-
-// Debugging
-var PieceMan    = require("./gamescripts/pieceMan");
-var Score       = require("./gamescripts/scoreboard");
-
-g1 = new Game(1);
-king = new PieceMan("B", g1.getSpace(4,2)).crown();
-console.log(g1.toString());
-console.log(g1.getScore());
