@@ -1,4 +1,5 @@
 PieceMan = require('./pieceMan');
+Move = require('./move');
 
 /*
 *   Constructs a PieceKing: gamepiece which is a king
@@ -6,6 +7,7 @@ PieceMan = require('./pieceMan');
 */
 function PieceKing(team, other, space) {
     PieceMan.call(this, team, other, space);
+    this.crowned = true;
 }
 
 /*  redirect prototype */
