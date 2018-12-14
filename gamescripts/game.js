@@ -1,6 +1,9 @@
-Space = require('./space');
+var Space = require('./space');
+var PieceMan = require('./pieceMan');
+var PieceKing = require('./pieceKing');
+var Scoreboard = require('./scoreboard');
 
-/*  Serve-Side
+/*
  * Constructor of Game object
  * Game initializes with a checkerboard in starting configuration
  * If, for instance, the Game is set to a 8x8 checkerboard, board is a
@@ -15,11 +18,9 @@ function Game(gameID) {
     this.id = gameID;                               // Set unique gameID
     this.gameState = "0 JOINED";                    // Initialize gamestate
 
-    ver = 8;                                        // Number of rows
-    hor = 4;                                        // Number of columns/2 (this initializes a 8x8 board)
-    lines = 3;                                      // Number of lines of pieces each player starts out with (maximum: ver/2-1)
-    this.takenA = 0;                                // takenOpp keeps count of opponent's taken off board
-    this.takenB = 0;                                // takenOwn keeps count of own piece's taken off board
+    ver = 8;                                        // GLOBAL Number of rows
+    hor = 4;                                        // GLOBAL Number of columns/2 (this initializes a 8x8 board)
+    lines = 3;                                      // GLOBAL Number of lines of pieces each player starts out with (maximum: ver/2-1)
 
     // Initialize an empty board hor x ver (8x4)
     this.board = new Array(0);
@@ -50,6 +51,7 @@ function Game(gameID) {
 Game.prototype.getBoard = function() { return this.board; };
 Game.prototype.getSpace = function(row, col) { return this.board[row][col]; };
 Game.prototype.getPiece = function(row, col) { return this.board[row][col].getPiece(); };
+Game.prototype.getScore = function() { return Scoreboard.getScore(); };
 
 /* Game setters */
 Game.prototype.setPiece = function(row, col, piece) {
@@ -77,8 +79,8 @@ Game.prototype.transitionMatrix = [
     [0, 1, 0, 0, 0, 0, 0, 0],   // 0 JOINT
     [1, 0, 1, 0, 0, 0, 0, 0],   // 1 JOINT
     [0, 0, 0, 1, 1, 0, 0, 0],   // 2 JOINT
-    [0, 0, 0, 0, 1, 0, 0, 1],   // A MOVE
-    [0, 0, 0, 1, 0, 0, 0, 1],   // B MOVE
+    [0, 0, 0, 0, 1, 1, 0, 1],   // A MOVE
+    [0, 0, 0, 1, 0, 0, 1, 1],   // B MOVE
     [0, 0, 0, 0, 0, 0, 0, 0],   // A WINS
     [0, 0, 0, 0, 0, 0, 0, 0],   // B WINS
     [0, 0, 0, 0, 0, 0, 0, 0]    // ABORTED
@@ -181,22 +183,65 @@ Game.prototype.addPlayer = function (p) {
     }
 };
 
+/* Returns a human-friendly string of the checkerboard. For debugging purposes */
+Game.prototype.toString = function() {
+    var checkerboard = new String;  // Output string
+    var piece                       // A reference to the current piece
+    var pieceChar;                  // Character symbolizing a piece
+
+    // Iterate over each space on the board and build the output string
+    checkerboard = checkerboard.concat("    0o  0e  1o  1e  2o  2e  3o  3e\n");
+    checkerboard = checkerboard.concat("  |---|---|---|---|---|---|---|---|\n");
+    for (let row=0; row<ver; row++) {
+        checkerboard = checkerboard.concat(row, " ");
+        for (let col=0; col<hor; col++) {
+            if (this.getPiece(row,col) === null) {
+                pieceChar = "x";
+            } else {
+                piece = this.getPiece(row, col);
+                if (piece.getTeam() === "A") {
+                    pieceChar = "\x1b[4m\x1b[33m";  // underscore yellow
+                    if (piece.getCrowned()) { pieceChar = pieceChar.concat("A"); }  // Case 1: team A's king
+                    else                    { pieceChar = pieceChar.concat("a"); }  // Case 2: team A's man 
+                } else {
+                    pieceChar = "\x1b[4m\x1b[35m";  // underscore magenta
+                    if (piece.getCrowned()) { pieceChar = pieceChar.concat("B"); }  // Case 3: team B's king
+                    else                    { pieceChar = pieceChar.concat("b"); }  // Case 4: team B's man
+                }
+                pieceChar = pieceChar.concat("\x1b[0m");    // reset
+            }
+
+            if (row%2 === 0) {  // If row is even
+                checkerboard = checkerboard.concat("|   | ", pieceChar, " ");
+            } else {            // If row is odd
+                checkerboard = checkerboard.concat("| ", pieceChar, " |   ");
+            }
+        }
+        checkerboard = checkerboard.concat("|\n  |---|---|---|---|---|---|---|---|\n");
+    }
+    return checkerboard;
+}
+
 /*
 *   movePiece removes the provided piece object from its prior space,
 *   and adds it to the destination space. All fields are updated accordingly
 *   Parameter piece: PieceMan or PieceKing object to move
-*   Parameter destination: Space object selected to move this piece into
+*   Parameter row: row of the destination Space this piece moves into
+*   Parameter col: column of the destination Space this piece moves into
+*   Returns a boolean whether move was successful (i.e. is the destination a valid space for the piece to move in?)
 *   Throws exception if piece is not a PieceMan or PieceKing object
 *   Throws exception if destination is not a Space object
 *   Throws exception if destination is not a valid move
 */
-Game.prototype.movePiece = function(piece, destination) {
+Game.prototype.movePiece = function(piece, row, col) {
+   
     // Exception
     if (!(piece instanceof PieceMan)) {
         throw "Piece selected to move is not a PieceMan or PieceKing object";
     }
-    // Pass on method
-    piece.movePiece(destination);
+
+    destination = this.getSpace(row, col);  // Get destination Space object
+    return piece.movePiece(destination);    // Pass on method
 }
 
 module.exports = Game;
