@@ -14,3 +14,5 @@ Move.prototype.getTakenPiece = function() { return this.takenPiece; };
 Move.prototype.setDestination = function(destination) { this.destination = destination; };
 Move.prototype.setTake = function(take) { this.take = take; };
 Move.prototype.setTakenPiece = function(takenPiece) { this.takenPiece = takenPiece; };
+
+module.exports = Move;

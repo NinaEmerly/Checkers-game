@@ -89,3 +89,5 @@ function getNeighbor(row, col, board) {
         return board[row][board_col];
     } else return new Space(row, col, board);
 }
+
+module.exports = Space;

@@ -1,9 +1,13 @@
+PieceMan = require('./pieceMan');
+Move = require('./move');
+
 /*
 *   Constructs a PieceKing: gamepiece which is a king
 *   PieceKing inherits from PieceMan
 */
 function PieceKing(team, other, space) {
     PieceMan.call(this, team, other, space);
+    this.crowned = true;
 }
 
 /*  redirect prototype */
@@ -52,3 +56,5 @@ PieceKing.prototype.validMoves = function() {
 PieceKing.prototype.crown = function() {
     return this;
 }
+
+module.exports = PieceKing;
